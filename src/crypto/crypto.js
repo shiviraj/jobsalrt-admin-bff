@@ -19,10 +19,13 @@ const encrypt = (text, {headers}, defaultToken) => {
 };
 
 const decrypt = ({headers, body}, defaultToken) => {
-  const secretKey = getSecretKey(headers, defaultToken)
-  const decipher = crypto.createDecipheriv(algorithm, secretKey, Buffer.from(headers.iv, 'hex'));
-  const decrypted = Buffer.concat([decipher.update(Buffer.from(body.payload, 'hex')), decipher.final()]);
-  return decrypted.toString();
+  if (headers.encryption === "true") {
+    const secretKey = getSecretKey(headers, defaultToken)
+    const decipher = crypto.createDecipheriv(algorithm, secretKey, Buffer.from(headers.iv, 'hex'));
+    const decrypted = Buffer.concat([decipher.update(Buffer.from(body.payload, 'hex')), decipher.final()]);
+    return decrypted.toString();
+  }
+  return body.payload
 };
 
 module.exports = {encrypt, decrypt};
