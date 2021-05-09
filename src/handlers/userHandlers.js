@@ -1,19 +1,22 @@
 const BackendAPI = require("../api/backendAPI");
-const {encrypt} = require("../crypto/crypto");
+const {decrypt, encrypt} = require("../crypto/crypto");
 
 const API = new BackendAPI(process.env.BACKEND_URL || "http://localhost:8080")
 
-const sendData = (body, req) => {
-  return {payload: encrypt(body, req.headers.iv)}
+const sendData = (body, req, defaultToken) => {
+  return {payload: encrypt(JSON.stringify(body), req, defaultToken)}
 };
 
 const signInHandler = async (req, res) => {
   try {
+    req.payload = JSON.parse(decrypt(req, true))
     const {isOk, data} = await API.logIn(req.payload)
     if (!isOk) return res.sendStatus(401)
+    req.headers.authorization = data.token
     res.cookie("authorization", data.token)
-    res.send(sendData({isLoggedIn: true}, req))
+    res.send(sendData(data, req, true))
   } catch (err) {
+    console.log(err)
     res.sendStatus(404)
   }
 }
@@ -22,8 +25,10 @@ const getUserHandler = async (req, res) => {
   try {
     const {isOk, data} = await API.getUser(req.cookies.authorization)
     if (!isOk) return res.sendStatus(401)
-    res.send(sendData({name: data.name, email: data.email, token: data.token}, req))
+    const {name, email, token} = data
+    res.send(sendData({name, email, token}, req))
   } catch (err) {
+    console.log(err)
     res.sendStatus(404)
   }
 }

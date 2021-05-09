@@ -10,17 +10,18 @@ app.use(express.static('./public'));
 app.use(express.json({limit: '1mb'}));
 app.use(express.urlencoded({extended: true}));
 
-const decryptRequestPayload = req => {
+const decryptRequestPayload = (req, res) => {
+  if (req.path === "/api/user/sign-in") return
   if (req.body.payload) {
-    req.payload = JSON.parse(decrypt(req.body.payload, req.headers.iv))
-    console.log(req.payload)
+    const payload = req.headers.encryption === "true" ? decrypt(req) : req.body.payload;
+    req.payload = JSON.parse(payload);
   }
-
+  req.headers.authorization = req.cookies.authorization
 }
 
 
 app.use((req, res, next) => {
-  decryptRequestPayload(req)
+  decryptRequestPayload(req, res)
   next()
 })
 

@@ -2,23 +2,26 @@ const crypto = require("crypto")
 
 const algorithm = 'aes-256-ctr';
 
-const getSecretKey = () => {
-  return "defaultsecretkeydefaultsecretkey"
+const getSecretKey = (headers, defaultToken = false) => {
+  if (defaultToken)
+    return "defaultsecretkeydefaultsecretkey"
+  return headers.authorization.slice(0, 32)
 };
 
-const encrypt = (payload, iv) => {
-  const secretKey = getSecretKey()
-  const cipher = crypto.createCipheriv(algorithm, secretKey, Buffer.from(iv, 'hex'));
-  const encrypted = Buffer.concat([cipher.update(JSON.stringify(payload)), cipher.final()]);
-  return encrypted.toString('hex')
+const encrypt = (text, {headers}, defaultToken) => {
+  if (headers.encryption === "true") {
+    const secretKey = getSecretKey(headers, defaultToken)
+    const cipher = crypto.createCipheriv(algorithm, secretKey, Buffer.from(headers.iv, 'hex'));
+    const encrypted = Buffer.concat([cipher.update(text), cipher.final()]);
+    return encrypted.toString('hex')
+  }
+  return text
 };
 
-const decrypt = (content, iv) => {
-  const secretKey = getSecretKey()
-  const decipher = crypto.createDecipheriv(algorithm, secretKey, Buffer.from(iv, 'hex'));
-
-  const decrypted = Buffer.concat([decipher.update(Buffer.from(content, 'hex')), decipher.final()]);
-
+const decrypt = ({headers, body}, defaultToken) => {
+  const secretKey = getSecretKey(headers, defaultToken)
+  const decipher = crypto.createDecipheriv(algorithm, secretKey, Buffer.from(headers.iv, 'hex'));
+  const decrypted = Buffer.concat([decipher.update(Buffer.from(body.payload, 'hex')), decipher.final()]);
   return decrypted.toString();
 };
 
