@@ -1,7 +1,9 @@
-const express = require("express")
-const router = require("./router/apiRoutes")
-const cookieParser = require('cookie-parser');
-const {decrypt} = require("./crypto/crypto");
+import express from "express";
+import cookieParser from "cookie-parser";
+
+import postRouter from "./router/postRouter";
+import userRouter from "./router/userRouter";
+import {decrypt} from "./crypto/crypto";
 
 const app = express()
 
@@ -25,6 +27,7 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use("/api/user", router)
+app.use("/api/user", userRouter)
+app.use("/api", postRouter)
 
-module.exports = app
+export default app

@@ -1,4 +1,4 @@
-const crypto = require("crypto")
+const crypto = require("crypto");
 
 const algorithm = 'aes-256-ctr';
 
@@ -28,5 +28,5 @@ const decrypt = ({headers, body}, defaultToken) => {
   return body.payload
 };
 
-module.exports = {encrypt, decrypt};
+export {encrypt, decrypt};
 

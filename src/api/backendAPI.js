@@ -1,6 +1,4 @@
-const axios = require("axios")
-
-const isOk = status => status >= 200 && status < 300
+import axios from "axios";
 
 class BackendAPI {
   constructor(url) {
@@ -15,15 +13,19 @@ class BackendAPI {
     return this.get("/admin", authorization)
   }
 
+  getPosts(authorization, page) {
+    return this.get(`/posts/page/${page}`, authorization)
+  }
+
   async post(path, payload, authorization = "a") {
     const response = await axios.post(this.url + path, payload, {headers: {Authorization: authorization,}})
-    return {isOk: isOk(response.status), data: response.data}
+    return response.data
   }
 
   async get(path, authorization = "a") {
     const response = await axios.get(this.url + path, {headers: {Authorization: authorization}})
-    return {isOk: isOk(response.status), data: response.data}
+    return response.data
   }
 }
 
-module.exports = BackendAPI
+export default BackendAPI
