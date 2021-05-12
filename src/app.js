@@ -14,9 +14,11 @@ app.use(express.urlencoded({extended: true}));
 
 const decryptRequestPayload = (req, res) => {
   if (req.path === "/api/user/sign-in") return
+  console.log(req.path, req.method)
   if (req.body.payload) {
     const payload = req.headers.encryption === "true" ? decrypt(req) : req.body.payload;
     req.payload = JSON.parse(payload);
+    console.log(req.payload)
   }
   req.headers.authorization = req.cookies.authorization
 }
@@ -28,6 +30,6 @@ app.use((req, res, next) => {
 })
 
 app.use("/api/user", userRouter)
-app.use("/api", postRouter)
+app.use("/api/posts", postRouter)
 
 export default app

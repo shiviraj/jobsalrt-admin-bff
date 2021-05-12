@@ -1,8 +1,9 @@
 import express from "express";
-import {getPostsHandler} from "../handlers/postHandlers";
+import {getPostsHandler, getPostsPageCountHandler} from "../handlers/postHandlers";
 
 const router = express.Router()
 
-router.get("/posts/page/:page", getPostsHandler)
+router.post("/page/:page", getPostsHandler)
+router.post("/pageCount", getPostsPageCountHandler)
 
 export default router

@@ -2,8 +2,18 @@ import {API, sendData} from "./util/utils";
 
 const getPostsHandler = async (req, res) => {
   try {
-    console.log(req.params)
-    const data = await API.getPosts(req.cookies.authorization, req.params.page)
+    const data = await API.getPosts(req.cookies.authorization, req.params.page, req.payload)
+    res.send(sendData(data, req))
+  } catch (err) {
+    console.log(err)
+    res.sendStatus(404)
+  }
+};
+
+const getPostsPageCountHandler = async (req, res) => {
+  try {
+    const data = await API.getPostsCount(req.cookies.authorization, req.payload)
+    console.log(data)
     res.send(sendData(data, req))
   } catch (err) {
     console.log(err)
@@ -12,4 +22,4 @@ const getPostsHandler = async (req, res) => {
 };
 
 
-export {getPostsHandler}
+export {getPostsHandler, getPostsPageCountHandler}
