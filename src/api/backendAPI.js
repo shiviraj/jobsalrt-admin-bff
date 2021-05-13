@@ -10,6 +10,11 @@ class BackendAPI {
     return response.data
   }
 
+  async put(path, payload, authorization = "a") {
+    const response = await axios.put(this.url + path, payload, {headers: {Authorization: authorization,}})
+    return response.data
+  }
+
   async get(path, authorization = "a") {
     const response = await axios.get(this.url + path, {headers: {Authorization: authorization}})
     return response.data
@@ -28,7 +33,15 @@ class BackendAPI {
   }
 
   async getPostsCount(authorization, payload) {
-    return this.post('/posts/pageCount', payload, authorization)
+    return this.post('/posts/page-count', payload, authorization)
+  }
+
+  async getPost(authorization, url) {
+    return this.get(`/posts/${url}`, authorization)
+  }
+
+  async updatePost(authorization, url, payload) {
+    return this.put(`/posts/${url}`, payload, authorization)
   }
 }
 
