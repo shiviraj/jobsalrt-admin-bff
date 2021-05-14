@@ -43,6 +43,14 @@ class BackendAPI {
   async updatePost(authorization, url, payload) {
     return this.put(`/posts/${url}`, payload, authorization)
   }
+
+  async urlAvailable(authorization, url) {
+    return this.get(`/posts/${url}/available`, authorization)
+  }
+
+  async addPost(authorization, payload) {
+    return this.post("/posts", payload, authorization)
+  }
 }
 
 export default BackendAPI

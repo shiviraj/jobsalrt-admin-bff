@@ -13,7 +13,6 @@ const getPostsHandler = async (req, res) => {
 const getPostsPageCountHandler = async (req, res) => {
   try {
     const data = await API.getPostsCount(req.cookies.authorization, req.payload)
-    console.log(data)
     res.send(sendData(data, req))
   } catch (err) {
     console.log(err)
@@ -24,7 +23,6 @@ const getPostsPageCountHandler = async (req, res) => {
 const getPostHandler = async (req, res) => {
   try {
     const data = await API.getPost(req.cookies.authorization, req.params.url)
-    console.log(data)
     res.send(sendData(data, req))
   } catch (err) {
     console.log(err)
@@ -35,7 +33,26 @@ const getPostHandler = async (req, res) => {
 const updatePostHandler = async (req, res) => {
   try {
     const data = await API.updatePost(req.cookies.authorization, req.params.url, req.payload)
-    console.log(data)
+    res.send(sendData(data, req))
+  } catch (err) {
+    console.log(err)
+    res.sendStatus(404)
+  }
+};
+
+const getUrlAvailableHandler = async (req, res) => {
+  try {
+    const data = await API.urlAvailable(req.cookies.authorization, req.params.url)
+    res.send(sendData(data, req))
+  } catch (err) {
+    console.log(err)
+    res.sendStatus(404)
+  }
+};
+
+const addPostsHandler = async (req, res) => {
+  try {
+    const data = await API.addPost(req.cookies.authorization, req.payload)
     res.send(sendData(data, req))
   } catch (err) {
     console.log(err)
@@ -44,4 +61,11 @@ const updatePostHandler = async (req, res) => {
 };
 
 
-export {getPostsHandler, getPostsPageCountHandler, getPostHandler, updatePostHandler}
+export {
+  getPostsHandler,
+  getPostsPageCountHandler,
+  getPostHandler,
+  updatePostHandler,
+  getUrlAvailableHandler,
+  addPostsHandler
+}
