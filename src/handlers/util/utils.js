@@ -7,4 +7,13 @@ const sendData = (body, req, defaultToken) => {
   return {payload: encrypt(JSON.stringify(body), req, defaultToken)}
 };
 
-export {API, sendData}
+const removeEmptyListFromObject = (obj) => {
+  if (typeof obj !== "object") return obj
+  return Object.keys(obj).reduce((object, key) => {
+    if (!obj[key].toString()) return object
+    object[key] = obj[key]
+    return object
+  }, {})
+}
+
+export {API, sendData, removeEmptyListFromObject}

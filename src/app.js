@@ -14,13 +14,13 @@ app.use(express.urlencoded({extended: true}));
 
 const decryptRequestPayload = (req, res) => {
   if (req.path === "/api/user/sign-in") return
-  console.log(req.path, req.method)
+  console.log(req.path, req.method,)
+  req.headers.authorization = req.cookies.authorization
   if (req.body.payload) {
     const payload = req.headers.encryption === "true" ? decrypt(req) : req.body.payload;
     req.payload = JSON.parse(payload);
     console.log(req.payload)
   }
-  req.headers.authorization = req.cookies.authorization
 }
 
 

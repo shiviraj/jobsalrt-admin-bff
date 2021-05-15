@@ -20,6 +20,11 @@ class BackendAPI {
     return response.data
   }
 
+  async delete(path, authorization = "a") {
+    const response = await axios.delete(this.url + path, {headers: {Authorization: authorization}})
+    return response.data
+  }
+
   logIn(payload) {
     return this.post("/admin/sign-in", payload)
   }
@@ -50,6 +55,10 @@ class BackendAPI {
 
   async addPost(authorization, payload) {
     return this.post("/posts", payload, authorization)
+  }
+
+  async deletePost(authorization, url) {
+    return this.delete(`/posts/${url}`, authorization)
   }
 }
 
