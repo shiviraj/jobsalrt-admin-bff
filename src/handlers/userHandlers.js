@@ -1,15 +1,14 @@
-import {API, sendData} from "./util/utils";
-
-const {decrypt} = require("../crypto/crypto");
-
+import {API} from "./util/utils";
 
 const signInHandler = async (req, res) => {
   try {
-    req.payload = JSON.parse(decrypt(req, true))
-    const data = await API.logIn(req.payload)
-    req.headers.authorization = data.token
-    res.cookie("authorization", data.token)
-    res.send(sendData(data, req, true))
+    const data = await API.logIn(req.body)
+    setTimeout(() => {
+      if (!data.token) return res.sendStatus(401)
+      req.headers.authorization = data.token
+      res.cookie("authorization", data.token)
+      res.send(data)
+    }, 2000)
   } catch (err) {
     console.log(err)
     res.sendStatus(404)
@@ -19,7 +18,7 @@ const signInHandler = async (req, res) => {
 const getUserHandler = async (req, res) => {
   try {
     const {name, email, token} = await API.getUser(req.cookies.authorization)
-    res.send(sendData({name, email, token}, req))
+    res.send({name, email, token})
   } catch (err) {
     console.log(err)
     res.sendStatus(404)

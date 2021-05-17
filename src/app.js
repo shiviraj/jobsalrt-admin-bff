@@ -3,33 +3,35 @@ import cookieParser from "cookie-parser";
 
 import postRouter from "./router/postRouter";
 import userRouter from "./router/userRouter";
-import {decrypt} from "./crypto/crypto";
+import {initEncryption} from "./crypto/crypto";
 
 const app = express()
+
+app.use(function (req, res, next) {
+  console.log(req.path, req.method, req.headers)
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, disable-encryption, iv");
+  res.header("Access-Control-Allow-Method", "GET, POST, PUT, DELETE, PATCH")
+  if (req.method === "OPTIONS") return res.send({})
+  next();
+});
 
 app.use(cookieParser());
 app.use(express.static('./public'));
 app.use(express.json({limit: '1mb'}));
 app.use(express.urlencoded({extended: true}));
-
-const decryptRequestPayload = (req, res) => {
-  if (req.path === "/api/user/sign-in") return
-  console.log(req.path, req.method,)
-  req.headers.authorization = req.cookies.authorization
-  if (req.body.payload) {
-    const payload = req.headers.encryption === "true" ? decrypt(req) : req.body.payload;
-    req.payload = JSON.parse(payload);
-    console.log(req.payload)
-  }
-}
-
+app.use(initEncryption)
 
 app.use((req, res, next) => {
-  decryptRequestPayload(req, res)
+  console.log(req.body, "body")
   next()
 })
 
+
 app.use("/api/user", userRouter)
 app.use("/api/posts", postRouter)
+app.use("/api/user/validate", (req, res) => {
+  res.send({email: "raj.shiviraj@gmail.com", name: "Shivam Rajput"})
+})
 
 export default app
