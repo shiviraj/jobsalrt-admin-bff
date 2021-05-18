@@ -17,7 +17,7 @@ const signInHandler = async (req, res) => {
 
 const getUserHandler = async (req, res) => {
   try {
-    const {name, email, token} = await API.getUser(req.cookies.authorization)
+    const {name, email, token} = await API.getUser(req.headers.authorization)
     res.send({name, email, token})
   } catch (err) {
     console.log(err)

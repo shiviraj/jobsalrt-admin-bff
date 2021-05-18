@@ -13,7 +13,7 @@ const router = express.Router()
 
 router.post("", addPostsHandler)
 router.post("/page/:page", getPostsHandler)
-router.post("/page-count", getPostsPageCountHandler)
+router.post("/posts-count", getPostsPageCountHandler)
 router.get("/:url", getPostHandler)
 router.put("/:url", updatePostHandler)
 router.delete("/:url", deletePostHandler)

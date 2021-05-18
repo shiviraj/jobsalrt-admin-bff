@@ -32,7 +32,6 @@ const initCrypto = (key, iv) => {
   }
 }
 
-
 const encryptResponsePayload = (res, key, iv) => {
   const {encrypt} = initCrypto(key, iv)
   const send = res.send
@@ -47,17 +46,19 @@ const decryptRequestObject = (req, key, iv) => {
   const payload = req.body && req.body.payload
   if (!payload) return
   req.body = decrypt(payload)
+  console.log(req.body, req.path)
 };
 
 
-const isAuthTokenPresent = req => req.headers['authorization'] && req.headers[AUTHORIZATION_HEADER] !== 'undefined'
+const isAuthTokenPresent = req => !!req.headers[AUTHORIZATION_HEADER]
 const isEncryptionEnabled = req => !req.headers[DISABLE_ENCRYPTION_HEADER]
 
 const initEncryption = (req, res, next) => {
   if (isAuthTokenPresent(req) && isEncryptionEnabled(req)) {
-    const authToken = req.headers['authorization']
+    const authToken = req.headers[AUTHORIZATION_HEADER]
     const iv = Buffer.from(req.headers['iv'], 'hex')
     const secretKey = getSecretKey(authToken)
+    console.log(secretKey)
     decryptRequestObject(req, secretKey, iv)
     encryptResponsePayload(res, secretKey, iv)
   }

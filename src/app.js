@@ -22,16 +22,7 @@ app.use(express.json({limit: '1mb'}));
 app.use(express.urlencoded({extended: true}));
 app.use(initEncryption)
 
-app.use((req, res, next) => {
-  console.log(req.body, "body")
-  next()
-})
-
-
 app.use("/api/user", userRouter)
 app.use("/api/posts", postRouter)
-app.use("/api/user/validate", (req, res) => {
-  res.send({email: "raj.shiviraj@gmail.com", name: "Shivam Rajput"})
-})
 
 export default app
