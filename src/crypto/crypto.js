@@ -35,7 +35,8 @@ const initCrypto = (key, iv) => {
 const encryptResponsePayload = (res, key, iv) => {
   const {encrypt} = initCrypto(key, iv)
   const send = res.send
-  res.send = (responseBody) => {
+
+  res.send = function (responseBody) {
     const payload = JSON.stringify({payload: encrypt(responseBody)})
     send.call(this, payload)
   }
@@ -46,7 +47,6 @@ const decryptRequestObject = (req, key, iv) => {
   const payload = req.body && req.body.payload
   if (!payload) return
   req.body = decrypt(payload)
-  console.log(req.body, req.path)
 };
 
 
@@ -58,7 +58,6 @@ const initEncryption = (req, res, next) => {
     const authToken = req.headers[AUTHORIZATION_HEADER]
     const iv = Buffer.from(req.headers['iv'], 'hex')
     const secretKey = getSecretKey(authToken)
-    console.log(secretKey)
     decryptRequestObject(req, secretKey, iv)
     encryptResponsePayload(res, secretKey, iv)
   }
