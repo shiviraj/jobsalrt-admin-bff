@@ -34,6 +34,15 @@ const PostController = () => {
       })
   })
 
+  router.get("/:url/update", (req, res) => {
+    PostService.getUpdates(req.params.url)
+      .then(response => res.send(response.data))
+      .catch(error => {
+        logger.logAPIError(req, error, POSTS_CUSTOM_ERRORS.PAGE_NOT_FOUND)
+        handleError(error, res, POSTS_CUSTOM_ERRORS.PAGE_NOT_FOUND)
+      })
+  })
+
   return router
 }
 

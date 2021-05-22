@@ -18,6 +18,10 @@ const Post = {
     return API.get(`${BASE_PATH}/${url}/available`);
   },
 
+  getUpdates(url) {
+    return API.get(`${BASE_PATH}/${url}/update`);
+  },
+
 }
 
 export {Post}

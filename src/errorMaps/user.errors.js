@@ -1,6 +1,6 @@
 const USER_CUSTOM_ERRORS = {
   UNAUTHORIZED: {
-    statusCode: 401,
+    statusCode: 403,
     message: "Unauthorized user"
   }
 }

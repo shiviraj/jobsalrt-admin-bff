@@ -11,6 +11,10 @@ const PostService = {
 
   urlAvailable(url) {
     return Post.urlAvailable(url)
+  },
+
+  getUpdates(url) {
+    return Post.getUpdates(url)
   }
 }
 
