@@ -18,6 +18,6 @@ setInterval(() => {
     .catch(() => ({}))
 
   const date = new Date()
-  if (![0, 6].includes(date.getUTCDay()) && [19, 20].includes(date.getUTCHours()))
+  if (![0, 6].includes(date.getUTCDay()) && [10, 11].includes(date.getUTCHours()))
     axios.get("https://stock-market-alert.herokuapp.com/").catch(() => ({}))
 }, 600000)
